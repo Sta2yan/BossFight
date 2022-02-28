@@ -10,23 +10,21 @@ namespace PasswordProgram
     {
         static void Main(string[] args)
         {
-            const char idRashamonAttack = '1';
-            const char idHuganzakuraAttack = '2';
-            const char idDimensionalRiftAttack = '3';
-            const char idCloneAttack = '4';
-            const char idAlpacaAttack = '5';
+            const char IdRashamonAttack = '1';
+            const char IdHuganzakuraAttack = '2';
+            const char IdDimensionalRiftAttack = '3';
+            const char IdCloneAttack = '4';
+            const char IdAlpacaAttack = '5';
 
             Random random = new Random();
 
             int maximumPlayerHealth = 101;
             int minimumPlayerHealth = 70;
             int playerHealth = random.Next(minimumPlayerHealth, maximumPlayerHealth);
-            int numberHealthPlayerDie = 0;
-            int halfPlayerHealth = 2;
+            int halfOfNumber = 2;
             int maximumBossHealth = 301;
             int minimumBossHealt = 200;
             int bossHealth = random.Next(minimumBossHealt, maximumBossHealth);
-            int numberHealthBossDie = 0;
             int bossAttackPhase;
             int maximumBossAttackPhase = 4;
             int minimumBossAttackPhase = 1;
@@ -41,11 +39,12 @@ namespace PasswordProgram
             int damageHuganzakuraAttack = 30;
             int healingDimensionalRiftAttack = 30;
             int damageCloneAttack = 50;
-            int healingAlpacaAttack;
             int maximumCloneAttackChance = 7;
             int minimumCloneAttackChance = 1;
             int executeCloneAttack = 1;
             int cloneAttackChance;
+            int healingAlpacaAttack;
+            int percentAlpacaAttackChance = 10;
             int maximumAlpacaAttackChance = 11;
             int minimumAlpacaAttackChance = 1;
             int executeAlpacaAttack = 1;
@@ -56,31 +55,38 @@ namespace PasswordProgram
             string dimensionalRiftAttack = "dimensional rift";
             string cloneAttack = "clone";
             string alpacaAttack = "alpaca";
-            string lastAttack = "none";
+            string noneAttack = "none";
+            string lastAttack = noneAttack;
             bool isInvisible = false;
 
-            while (playerHealth > numberHealthPlayerDie && bossHealth > numberHealthBossDie)
+            while (playerHealth > 0 && bossHealth > 0)
             {
                 Console.WriteLine($"       Ваше здоровье => {playerHealth}       |       Здоровье врага => {bossHealth}" +
                                   $"\nКак будем атаковать?" +
-                                  $"\n1. Рашамон (Призывает теневого духа для нанесения атаки)   |   Отнимает 10 хп игроку)" +
-                                  $"\n2. Хуганзакура (Может быть выполнен только после призыва теневого духа!)   |   Наносит 30 ед. урона" +
-                                  $"\n3. Межпространственный разлом – позволяет скрыться в разломе и восстановить 30 хп. " +
+                                  $"\n{IdRashamonAttack}. Рашамон (Призывает теневого духа для нанесения атаки)   |" +
+                                  $"   Отнимает {damageRashamonAttack} хп игроку)" +
+                                  $"\n{IdHuganzakuraAttack}. Хуганзакура (Может быть выполнен только после призыва теневого духа!)   |" +
+                                  $"   Наносит {damageHuganzakuraAttack} ед. урона" +
+                                  $"\n{IdDimensionalRiftAttack}. Межпространственный разлом – позволяет скрыться в разломе и " +
+                                  $"восстановить {healingDimensionalRiftAttack} хп. " +
                                   $"Урон босса по вам не проходит (Не может быть использовано подряд)" +
-                                  $"\n4. Клонирование (Создает вашего клона и если враг попадает по нему наносит 50 ед. урона врагу)" +
-                                  $"\n5. Альпака (Шанс, что она в вас плюнет и увеличит ваше здоровье в 2 раза равен 10%)" +
-                                  $"\n-------------------------------------------");
+                                  $"\n{IdCloneAttack}. Клонирование (Создает вашего клона и если враг попадает по нему наносит " +
+                                  $"{damageCloneAttack} ед. урона врагу)" +
+                                  $"\n{IdAlpacaAttack}. Альпака (Шанс, что она в вас плюнет и увеличит ваше здоровье в {halfOfNumber} " +
+                                  $"раза равен {percentAlpacaAttackChance}%)" +
+                                  $"\n-------------------------------------------" +
+                                  $"\n\n-------Ваша последняя атака: {lastAttack}.-------");
                 userInput = Console.ReadKey().KeyChar;
 
                 switch (userInput)
                 {
-                    case idRashamonAttack:
+                    case IdRashamonAttack:
                         bossHealth -= damageRashamonAttack;
                         lastAttack = rashamonAttack;
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("\nВы использовали Рашамон!");
                         break;
-                    case idHuganzakuraAttack:
+                    case IdHuganzakuraAttack:
                         if (lastAttack.Equals(rashamonAttack))
                         {
                             bossHealth -= damageHuganzakuraAttack;
@@ -90,13 +96,15 @@ namespace PasswordProgram
                         }
                         else
                         {
+                            lastAttack = noneAttack;
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("\nВы не смогли использовать Хуганзакура!");
                         }
                         break;
-                    case idDimensionalRiftAttack:
+                    case IdDimensionalRiftAttack:
                         if (lastAttack.Equals(dimensionalRiftAttack))
                         {
+                            lastAttack = noneAttack;
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("\nВы не смогли использовать Межпространственный разлом!");
                         }
@@ -109,43 +117,45 @@ namespace PasswordProgram
                             Console.WriteLine("\nВы использовали Межпространственный разлом!");
                         }
                         break;
-                    case idCloneAttack:
+                    case IdCloneAttack:
                         cloneAttackChance = random.Next(minimumCloneAttackChance, maximumCloneAttackChance);
                         if (cloneAttackChance == executeCloneAttack)
                         {
                             bossHealth -= damageCloneAttack;
                             lastAttack = cloneAttack;
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("\nВы использовали Клонирование!" +
-                                              "\nВрагу нанесён урон в 50 единиц!");
+                            Console.WriteLine($"\nВы использовали Клонирование!" +
+                                              $"\nВрагу нанесён урон в {damageCloneAttack} единиц!");
                         }
                         else
                         {
+                            lastAttack = cloneAttack;
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("\nВы использовали Клонирование!" +
                                               "\nКлонирование не сработало!");
                         }
                         break;
-                    case idAlpacaAttack:
+                    case IdAlpacaAttack:
                         alpacaAttackChance = random.Next(minimumAlpacaAttackChance, maximumAlpacaAttackChance);
                         if (alpacaAttackChance == executeAlpacaAttack)
                         {
-                            healingAlpacaAttack = playerHealth / halfPlayerHealth;
+                            healingAlpacaAttack = playerHealth / halfOfNumber;
                             playerHealth += healingAlpacaAttack;
                             lastAttack = alpacaAttack;
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("\nВы призвали Альпаку!" +
-                                              "\nВы увеличили здоровье в 2 раза!");
+                            Console.WriteLine($"\nВы призвали Альпаку!" +
+                                              $"\nВы увеличили здоровье в {halfOfNumber} раза!");
                         }
                         else
                         {
+                            lastAttack = alpacaAttack;
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("\nВы призвали Альпаку!" +
                                               "\nАльпака убежал :'/");
                         }
                         break;
                     default:
-                        lastAttack = "none";
+                        lastAttack = noneAttack;
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine("\nВы промахнулись атакой!");
                         break;
@@ -187,13 +197,13 @@ namespace PasswordProgram
                 Console.Clear();
             }
 
-            if (playerHealth > numberHealthPlayerDie)
+            if (playerHealth > 0)
             {
                 Console.BackgroundColor = ConsoleColor.Green;
                 Console.Clear();
                 Console.WriteLine($"Поздравляем с победой! Оставшиеся очки здоровья: {playerHealth} единиц.");
             }
-            else if(bossHealth > numberHealthBossDie)
+            else if(bossHealth > 0)
             {
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.Clear();
